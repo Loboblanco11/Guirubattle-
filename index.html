@@ -1,0 +1,238 @@
+<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Guiru Tag Game</title> 
+  <style> body { background-color: #1f1f1f; font-family: 'Arial', sans-serif; color: #ffd700; text-align: center; background-image: url(); /* Ajusta la ruta según la ubicación de tu imagen */ background-size: cover; background-position: center; background-repeat: no-repeat; padding-bottom: 100px; /* Espacio para los botones inferiores */ } 
+   
+    #container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: rgba(0, 0, 0, 0.8); radio del borde: 10px; }
+    
+    #clickable-image { ancho: 150px; alto: 150px; cursor: puntero; transición: transform 0.1s; pantalla: bloque; margen: 0 automático; radio del borde: 50%; borde: 3px sólido #0000ff; color de fondo: #ffffff; sombra de caja: 0 0 10px rgba(0, 0, 255, 0.5); }
+   
+    #score { tamaño de fuente: 24px; margen superior: 20px; color: #ffffff; } 
+    
+    #energy-container { pantalla: flex; alinear elementos: centro; justificar contenido: centro; tamaño de fuente: 18px; margen superior: 10px; } 
+   
+    #energy-icon { ancho: 24px; alto: 24px; margen derecho: 5px; } 
+    
+    #energy { tamaño de fuente: 18px; margen superior: 10px; color: #ffffff; }
+   
+    #timer-display { tamaño de fuente: 16px; margen superior: 10px; color: #ffffff; } 
+    
+    #dragon-ball-title { familia de fuentes: 'Impact', sans-serif; tamaño de fuente: 48px; margen superior: 40px; color: #ff0000; sombra de texto: 2px 2px 4px rgba(0, 0, 0, 0.8); } 
+    
+    .footer-buttons { pantalla: flex; contenido de justificación: espacio alrededor; posición: fija; inferior: 0; ancho: 100%; color de fondo: rgba(0, 0, 0, 0.9); relleno: 10px 0; sombra de caja: 0 -2px 5px rgba(0, 0, 0, 0.5); } 
+    
+    .footer-buttons botón { color de fondo: transparente; borde: ninguno; relleno: 0; cursor: puntero; transición: transform 0.3s; } 
+    
+    .footer-buttons botón img { ancho: 60px; alto: 60px; } 
+    .footer-buttons botón:hover { transform: scale(1.1); }
+    @keyframes coin-animation { 0% { transform: scale(1) translateY(0); opacidad: 1; } 100% { transform: scale(0.5) translateY(-100px); opacidad: 0; } } 
+    .coin { position: absolute; width: 50px; height: 50px; background-image: url('https://imgbb.host/images/images426b4d15935ae109.png'); background-size: cover; animation: 
+      coin-animation 1s entrada-salida hacia adelante; pointer-events: none; } </style> </head> <body> <div id="container"> 
+  <div id="dragon-ball-title">Batalla de Guiru</div> <img id="clickable-image" src="https://i.ibb.co/pncqkqF/guiru-token-removebg-preview.png" alt="Click Me">
+  
+  <div id="score">Puntos: 0</div> 
+  
+<div id="total-puntaje">0</div>
+
+  <button id="claim-button" style="display:none;" onclick="hacerClaim()">Claim</button>
+  
+  <div id="energy-container"> <img id="energy-icon" src="https://i.ibb.co/fpP4Hnr/batery-icon-removebg-preview-1.png"alt="Energy">
+    <div id="energy">Energía: 500</div> </div> <div id="timer-display">00:00:00</div> </div>
+  <div class="footer-buttons"> 
+    <button id="boton-referencias"> <img src="https://i.ibb.co/2dQ9wFg/refinvi-removebg-preview-1.png" alt="Referencias"> </button> 
+    <button id="boton-tareas"> <img src="https://i.ibb.co/JQSDTPN/taskG.jpg" alt="Tarea"> </button> 
+    <button id="boton-batlle"> <img src="https://i.ibb.co/y6RjkLG/BATALLAg5.png" alt="Tarea"> </button> 
+    <button id="boton-mineria"> <img src="https://i.ibb.co/tCwkDss/minadoguiru.jpg" alt="Mineria"> </button> 
+    <button id="boton-impulso"> <img src="https://i.ibb.co/GTkVQDD/boosg.jpg" alt="Boost"> </button> </div> 
+  <div class="footer-buttons">
+    <button id="referencias-button">
+        <img src="https://i.ibb.co/2dQ9wFg/refinvi-removebg-preview-1.png" alt="Referencias">
+    </button>
+    <button id="task-button">
+        <img src="https://i.ibb.co/JQSDTPN/taskG.jpg" alt="Task">
+    </button>
+    <button id="battle-button">
+        <img src="https://i.ibb.co/y6RjkLG/BATALLAg5.png" alt="Battle">
+    </button>
+    <button id="mining-button">
+        <img src="https://i.ibb.co/tCwkDss/minadoguiru.jpg" alt="Mining">
+    </button>
+    <!-- Modal de Minería -->
+<div id="mining-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal('mining-modal')">&times;</span>
+        <h2>Minería</h2>
+        <div id="mining-types">
+            <!-- Tipo de Minería: Free -->
+            <div class="mining-type">
+                <h3>Minería Free</h3>
+                <img id="free-image" src="https://i.ibb.co/znbs6py/IMG-20241002-161603-208.jpg" alt="Minería Free" />
+                <p>Puntos cada hora: 500</p>
+                <button id="free-start-button" onclick="iniciarMinado('free')">Iniciar Minería Free</button>
+                <div id="free-timer" style="display:none;">Tiempo restante: <span id="free-time">60:00</span></div>
+                <button id="free-claim-button" style="display:none;" onclick="reclamarPuntos('free')">Claim</button>
+            </div>
+
+            <!-- Tipo de Minería: NFT Común -->
+            <div class="mining-type">
+                <h3>NFT Común</h3>
+                <img id="common-image" src="https://i.ibb.co/RpCw5BK/IMG-20241002-162336-471.jpg" alt="NFT Común" />
+                <p>Puntos cada hora: 1500</p>
+                <button id="common-check-button" onclick="verificarNFT('common')">Verificar NFT</button>
+                <div id="common-timer" style="display:none;">Tiempo restante: <span id="common-time">60:00</span></div>
+                <button id="common-claim-button" style="display:none;" onclick="reclamarPuntos('common')">Claim</button>
+            </div>
+
+            <!-- Tipo de Minería: NFT RARE -->
+            <div class="mining-type">
+                <h3>NFT Rare</h3>
+                <img id="rare-image" src="https://i.ibb.co/k8c3smH/IMG-20241002-163825-566.jpg" alt="NFT Rare" />
+                <p>Puntos cada hora: 3500</p>
+                <button id="rare-check-button" onclick="verificarNFT('rare')">Verificar NFT</button>
+                <div id="rare-timer" style="display:none;">Tiempo restante: <span id="rare-time">60:00</span></div>
+                <button id="rare-claim-button" style="display:none;" onclick="reclamarPuntos('rare')">Claim</button>
+            </div>
+
+            <!-- Tipo de Minería: NFT Legendario -->
+            <div class="mining-type">
+                <h3>NFT Legendario</h3>
+                <img id="legendary-image" src="https://i.ibb.co/QkYSWzQ/IMG-20241002-164439-758.jpg" alt="NFT Legendario" />
+                <p>Puntos cada 45 minutos: 6000</p>
+                <button id="legendary-check-button" onclick="verificarNFT('legendary')">Verificar NFT</button>
+                <div id="legendary-timer" style="display:none;">Tiempo restante: <span id="legendary-time">45:00</span></div>
+                <button id="legendary-claim-button" style="display:none;" onclick="reclamarPuntos('legendary')">Claim</button>
+            </div>
+
+            <!-- Tipo de Minería: NFT Épico -->
+            <div class="mining-type">
+                <h3>NFT Épico</h3>
+                <img id="epic-image" src="https://i.ibb.co/WcvZfc5/IMG-20241002-164606-879.jpg" alt="NFT Épico" />
+                <p>Puntos cada 30 minutos: 10000</p>
+                <button id="epic-check-button" onclick="verificarNFT('epic')">Verificar NFT</button>
+                <div id="epic-timer" style="display:none;">Tiempo restante: <span id="epic-time">30:00</span></div>
+                <button id="epic-claim-button" style="display:none;" onclick="reclamarPuntos('epic')">Claim</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <button id="boost-button">
+        <img src="https://i.ibb.co/GTkVQDD/boosg.jpg" alt="Boost">
+    </button>
+</div>
+  
+  <!-- Modal Boost -->
+<div id="boost-modal" class="modal boost-modal">
+    <div class="modal-content boost-content">
+        <span class="close" onclick="cerrarModalBoost()">&times;</span>
+        <h2>Boosts Power</h2>
+
+        <div id="boost-1">
+            <img src="https://i.ibb.co/kQQQRyV/IMG-20241011-151503-361.jpg" alt="Boost 1 Image" class="boost-image">
+            <p>(Requiere 5 referencias)</p>
+            <button id="boost-1-button" onclick="activarBoost(1)">Activar</button>
+        </div>
+
+        <div id="boost-2">
+            <img src="https://i.ibb.co/brZFk6Z/IMG-20241011-155605-780.jpg" alt="Boost 2 Image" class="boost-image">
+            <p>(Requiere 10 referencias)</p>
+            <button id="boost-2-button" onclick="activarBoost(2)">Activar</button>
+        </div>
+
+        <div id="boost-3">
+            <img src="https://i.ibb.co/Xp25K6h/IMG-20241011-160255-643.jpg" alt="Boost 3 Image" class="boost-image">
+            <p>(Requiere 25 referencias)</p>
+            <button id="boost-3-button" onclick="activarBoost(3)">Activar</button>
+        </div>
+
+        <div id="boost-4">
+            <img src="https://i.ibb.co/dBKPhQL/IMG-20241011-160555-919.jpg" alt="Boost 4 Image" class="boost-image">
+            <p>(2 minas activas)</p>
+            <button id="boost-4-button" onclick="activarBoost(4)">Activar</button>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="task-modal" class="modal-task">
+    <div class="modal-task-content">
+        <span class="close-task">&times;</span>
+        <h2>Tareas</h2>
+        <ul id="task-list">
+            <li>
+                <span>Tarea 1: Únete a la comunidad</span>
+                <a href= https://t.me/guirutoken
+                   target="_blank" id="task-1-link">IR</a>
+                <button id="claim-task-1" class="claim-button" disabled>Claim</button>
+            </li>
+            <li>
+                <span>Tarea 2: Seguir en X</span>
+                <a href="https://twitter.com" target="_blank" id="task-2-link">IR</a>
+                <button id="claim-task-2" class="claim-button" disabled>Claim</button>
+               <span>Tarea 3: Ver un video en YouTube</span>
+                <a href="https://www.youtube.com" target="_blank" id="task-3-link">IR</a>
+                <button id="claim-task-3" class="claim-button" disabled>Claim</button>
+            </li>
+            <li>
+                <span>Tarea 4: Seguir en X</span>
+                <a href="https://twitter.com" target="_blank" id="task-4-link">IR</a>
+                <button id="claim-task-4" class="claim-button" disabled>Claim</button>
+               <span>Tarea 5: Ver un video en YouTube</span>
+                <a href="https://www.youtube.com" target="_blank" id="task-5-link">IR</a>
+                <button id="claim-task-5" class="claim-button" disabled>Claim</button>
+            </li>
+            <li>
+                <span>Tarea 6: Seguir en X</span>
+                <a href="https://twitter.com" target="_blank" id="task-6-link">IR</a>
+                <button id="claim-task-6" class="claim-button" disabled>Claim</button>
+               <span>Tarea 7: Ver un video en YouTube</span>
+                <a href="https://www.youtube.com" target="_blank" id="task-7-link">IR</a>
+                <button id="claim-task-7" class="claim-button" disabled>Claim</button>
+            </li>
+            <li>
+                <span>Tarea 8: unete al canal</span>
+                <a href="https://twitter.com" target="_blank" id="task-8-link">IR</a>
+                <button id="claim-task-8" class="claim-button" disabled>Claim</button>
+               
+        <p id="task-1-timer"></p>
+            </li>
+        </ul>
+    </div>
+</div>
+<div id="task-container">
+    <div class="task">
+       
+        <p id="task-1-timer"></p>
+      <p id="task-2-timer"></p>
+      <p id="task-3-timer"></p>
+    </div>
+    <!-- Puedes añadir más tareas de manera similar -->
+</div>
+<div id="invite-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="close-invite">&times;</span>
+        <h2>Invita Amigos</h2>
+        <p>Comparte tu enlace para invitar amigos a unirse al juego:</p>
+        <input type="text" id="invite-link" value="https://tusitio.com/invite" readonly>
+        <button id="copy-invite-link">Copiar Link</button>
+        <h3>Referencias :</h3>
+        <ul id="invited-list">
+            <!-- Lista de referencias se llenará dinámicamente -->
+        </ul>
+    </div>
+</div>
+
+  
+<div id="battle-modal" class="modal-battle">
+    <div class="modal-battle-content">
+        <span class="close-battle">&times;</span>
+        <h2>¡Prepárate para la Batalla!</h2>
+        <p>Sigue acumulando puntos y alimentando tus conocimientos sobre blockchain y demás tecnología. Muy pronto saldrá la colección NFT y comenzará la batalla. Espero y tú seas uno de los beneficiados con tu NFT gratis, que serán limitados. Los demás serán puestos al mercado para incentivar la liquidez del proyecto.</p>
+ <img    src=https://i.ibb.co/2FNH01Z/8a219861-9a6d-429c-8e86-c157fd3ffb1b.webp''
+                                                                                
+</div>
+      
+   
+
+  
+
+<script> deja puntuación = 0; dejar límite de energía = 500; let EnergyCooldown = 6 * 60 * 60 * 1000; // 6 horas en milisegundos let EnergyRemaining = EnergyLimit; // Energía inicial // Variable para controlar el tiempo del último toque y el tiempo del último reclamo de energía let lastTouchTime = Date.now(); let lastEnergyClaimTime = Date.now(); // Obtener la imagen clicable y los elementos de puntuación, energía y temporizador const clickableImage = document.getElementById('clickable-image'); const puntuaciónDisplay = documento.getElementById('puntuación'); const energíaDisplay = document.getElementById('energía'); const timerDisplay = document.getElementById('visualización del temporizador'); // Función para actualizar la puntuación y verificar límite de energía function updateScore() { // Verificar si ha pasado el tiempo de enfriamiento const currentTime = Date.now(); if (hora actual - última hora de contacto >= enfriamiento de energía) { puntuación = 0; // Reiniciar puntos si ha pasado el tiempo de enfriamiento EnergyRemaining = EnergyLimit; // Reiniciar la energía restante lastEnergyClaimTime = currentTime; // Actualizar el tiempo del último reclamo de energía } // Verificar si aún hay energía disponible if (score < EnergyLimit && EnergyRemaining > 0) { Score++; energía restante--; // Disminuir la energía restante scoreDisplay.innerText = Puntos: ${score}; energiaDisplay.innerText = Energía: ${energyRemaining}; animarClic(); createCoinAnimation(event.clientX, event.clientY); lastTouchTime = currentTime; // Actualizar el tiempo del último toque } else { alert('¡Has alcanzado el límite de toques de energía! Vuelve en 6 horas para más.'); } } // Función para animar la imagen al hacer clic function animateClick() { clickableImage.style.transform = 'scale(0.9)'; setTimeout(() => { clickableImage.style.transform = 'escala(1)'; }, 100); } // Función para crear la animación de la moneda function createCoinAnimation(x, y) { const coin = document.createElement('div'); moneda.className = 'moneda'; moneda.estilo.izquierda = ${x}px; moneda.estilo.top = ${y}px; documento.body.appendChild(moneda); setTimeout(() => { moneda.remove(); }, 1000); } // Temporizador para recuperar energía cada 6 horas function energyClaimTimer() { const currentTime = Date.now(); const timeSinceLastClaim = currentTime - lastEnergyClaimTime; const tiempo restante = energíaEnfriamiento - tiempoSinceLastClaim; // Si ha pasado el tiempo necesario para recuperar energía, agregue energía reclamada if (timeSinceLastClaim >= EnergyCooldown) { EnergyRemaining += EnergyLimit; energiaDisplay.innerText = Energía: ${energyRemaining}; lastEnergyClaimTime = currentTime; } // Calcular horas, minutos y segundos restantes para el próximo reclamo de energía const hours = Math.floor(remainingTime / (1000 * 60 * 60)); minutos constantes = Matemáticas.piso((tiempo restante % (1000 * 60 * 60)) / (1000 * 60)); segundos constantes = Math.floor((tiempo restante % (1000 * 60)) / 1000); // Mostrar el tiempo restante en el temporizador timerDisplay.innerText = ${hours.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:$ {segundos.toString().padStart(2, '0')}; // Llamar a la función nuevamente cada segundo setTimeout(energyClaimTimer, 1000); } // Iniciar el temporizador de reclamo de energía EnergyClaimTimer(); // Agregar el evento de clic a la imagen clicable clickableImage.addEventListener('click', updateScore); </script> </body> </html> 
